@@ -1,0 +1,102 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<!-- Content -->
+<div class="container-xxl config">
+  <div class="authentication-wrapper authentication-basic container-p-y">
+    <div class="authentication-inner">
+      <!-- Register -->
+      <div class="card" style="border-radius: 15px">
+        <div class="card-body">
+          <!-- Logo -->
+          <div class="app-brand justify-content-center">
+
+            <img src="assets/img/log1.png" alt="logo" width="40%" height="20%" />
+          </div>
+          <!-- /Logo -->
+          <h4 class="mb-2">Welcome ! 👋</h4>
+
+          <form  class="mb-3" [formGroup]="formService.formGroupLogin">
+            <div class="form-group mb-3">
+              <label for="email" class="form-label">Email </label>
+              <input
+                type="text"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                name="email-username"
+                placeholder="Enter your email"
+                autofocus
+                [ngClass]="{ 'is-invalid':formService.email && formService.email.errors && formService.email.touched}"
+              />
+              <div class="invalid-feedback" *ngIf="formService.email && formService.email.hasError('required')">
+                Please enter your email*
+              </div>
+
+            </div>
+            <div class="form-group mb-3 form-password-toggle">
+              <div class="d-flex justify-content-between">
+                <label class="form-label" for="password">Password</label>
+              </div>
+              <div class="input-group input-group-merge">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  name="password"
+                  formControlName="password"
+                  placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                  aria-describedby="password"
+                  [ngClass]="{ 'is-invalid': formService.password && formService.password.errors && formService.password.touched}"
+                />
+                <span class="input-group-text cursor-pointer" (click)="togglePasswordVisibility()">
+                      <i class="bx" [ngClass]="{'bx-hide': !isPasswordVisible, 'bx-show': isPasswordVisible}"></i>
+                </span>
+
+                <div class="invalid-feedback"
+                     *ngIf="formService.password && formService.password.hasError('required')" >
+                  Please enter your password*
+                </div>
+              </div>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" formControlName="isPatient" >
+              <label class="form-check-label" >
+                Sign in as Patient
+              </label>
+            </div>
+            <div class="mb-3">
+              <button class="btn btn-primary d-grid w-100" type="submit" (click)="onSubmit()"
+                      style="color: #fff;
+                      background-color: #696cff;
+                      border-color: #696cff;
+                      border-radius: 10px;
+                      margin-top: 5px;
+                      padding: 5px;
+                      box-shadow: 0 0.125rem 0.25rem 0 rgb(105 108 255 / 40%);"
+
+              >Log In</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- /Register -->
+    </div>
+  </div>
+  <!-- end content  -->
+
+  <!-- Alert container -->
+  <div class="alert-container">
+    <!-- Alert success -->
+    <div class="alert alert-success" role="alert" *ngIf="showsuccessmessage">Login successful! Redirecting...</div>
+
+    <!-- Alert error -->
+    <div class="alert alert-danger" role="alert" *ngIf="showerrormessage">Login failed. Please check your credentials and try again.</div>
+  </div>
+
+</div>
+
+<!-- / Content -->

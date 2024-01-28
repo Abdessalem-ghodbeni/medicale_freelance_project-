@@ -1,0 +1,10 @@
+<div>
+    <canvas id="myChart" *ngIf="apiData"></canvas>
+  </div>
+  
+  <div *ngIf="apiData">
+    <p>Avg: <span>{{ apiData?.avg }}</span></p>
+    <p *ngIf="apiData.max">Max: <span>{{ apiData?.max.measure }}</span></p>
+    <p *ngIf="apiData.min">Min: <span>{{ apiData?.min.measure }}</span></p>
+  </div>
+  

@@ -1,0 +1,234 @@
+<h2> Graph Summary</h2>
+<!-- btn properties -->
+<div style="display: flex; justify-content: end;">
+<button type="button"
+        class="btn btn-outline-info "
+        data-bs-toggle="modal"
+        data-bs-target="#basicModal1"
+        style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+        [ngClass]="{'showbtn': isButtonShow  , 'hidebtn': !isButtonShow || showNewGraphFilter  }"
+        data-toggle="modal"
+        aria-hidden="true"
+        data-target="#newNodeModal"
+>
+  <i class="fa-regular fa-eye"></i>
+  See Details
+</button>
+</div>
+<!-- btn properties in new graphe -->
+<div style="display: flex; justify-content: end;" *ngIf="SelectedfiltredNode">
+  <button type="button"
+          class="btn btn-outline-info "
+          data-bs-toggle="modal"
+          data-bs-target="#basicModal2"
+          style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+          data-toggle="modal"
+          aria-hidden="true"
+          data-target="#newNodeModal"
+  >
+    <i class="fa-regular fa-eye"></i>
+    See Details
+  </button>
+</div>
+<!-- loading spinner -->
+<div class="d-flex justify-content-center mt-5" *ngIf="loading" >
+  <h3>Loading...  </h3>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<!-- modal properties -->
+<div class="modal fade" id="basicModal1" tabindex="-1" aria-hidden="true"
+     [ngClass]="{  'show': isShowModal && !isEmpty && idNode && !isSelectedNodeGSOrVersion}">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title " id="exampleModalLabel2"> {{nameNode}} {{typealgo}}</h4>
+        <!-- btn close -->
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="clearData()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- div filter Filter Results -->
+       <div class="mt-2" *ngIf="nameNode==='FilterResults'">
+         <label  class="form-label">Api :</label>
+         <input type="text"  class="form-control col-6" readonly [value]="this.urlApi">
+         <div class="justify-content-end mt-3">
+           <button type="button" class="btn btn-primary  "  (click)="ExecuteApi(urlApi)"  data-bs-dismiss="modal">See Result</button>
+         </div>
+       </div>
+        <!-- div  "PRESCRIPTION" -->
+        <div class="mt-2" *ngIf="nameNode==='PRESCRIPTION'">
+          <label  class="form-label">Date :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.date">
+          <label  class="form-label">File :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.file">
+          <label  class="form-label">Url :</label>
+          <a [href]="this.url" target="_blank">
+            {{this.url}}
+          </a>
+        </div>
+        <!-- div Drugs -->
+        <div class="mt-2" *ngIf="nameNode==='DRUG'">
+          <label  class="form-label">Name :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.name">
+        </div>
+        <!-- div DrugsResults -->
+        <div class="mt-2" *ngIf="nameNode==='DrugsResults'">
+          <label  class="form-label">Api :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.urlApi">
+          <div class="justify-content-end mt-3">
+            <button class="btn btn-primary  " (click)="ExecuteApi(urlApi)">See Result</button>
+          </div>
+        </div>
+        <!-- div Document -->
+        <div class="mt-2" *ngIf="nameNode==='Document'">
+          <label  class="form-label">File Path :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.filePath">
+          <label  class="form-label"> Url :</label>
+          <a [href]="this.url" target="_blank">
+            {{this.url}}
+          </a>
+        </div>
+        <!-- div Results -->
+        <div class="mt-2" *ngIf="nameNode==='Results'">
+          <div *ngIf="aggregateFN">
+            <label  class="form-label" *ngIf="date">Date :</label>
+            <input *ngIf="date" type="text"  class="form-control col-6" readonly [value]="this.date">
+            <label  class="form-label">Mesure Of :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.mesureOf">
+            <label  class="form-label">Value :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.value">
+            <label  class="form-label">Fonction :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.aggregateFN">
+          </div>
+          <!---------- LDA ------------>
+          <div *ngIf="sipmleResult && typealgo==='LDA'">
+
+            <!-- LDAAAAAA -->
+            <div *ngFor="let entry of sipmleResultJson | keyvalue;let index=index">
+              <h4 class="mt-3 mb-2">Document : {{ index+1 }}</h4>
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>Keyword</th>
+                  <th>Percentage</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let keywordObj of entry.value[0]">
+                  <td>{{ keywordObj.keyword }}</td>
+                  <td>{{ keywordObj.percentage }}%</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!---------- NMF ------------>
+          <div  *ngIf="sipmleResult && typealgo === 'NMF'" >
+            <div *ngFor="let entry of sipmleResultJson | keyvalue">
+              <h4 class="mt-2 mb-2">Result : {{ entry.key }}</h4>
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>Keywords</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let keywordList of entry.value">
+                  <td>
+                    <ul class="list-group">
+                      <li *ngFor="let keyword of keywordList" class="list-group-item">{{ keyword }}</li>
+                    </ul>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!---------- All Abstractive algo ------------>
+
+          <div *ngIf="sipmleResult && (typealgo != 'NMF' && typealgo != 'LDA')" >
+            <div *ngFor="let entry of sipmleResultJson | keyvalue; let index = index">
+              <h4 class="mt-3">Document : {{ index + 1 }}</h4>
+              <ul class="list-group mt-1">
+                <li *ngFor="let value of entry.value" class="list-group-item">{{ value }}</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <!-- div IMAGE -->
+        <div class="mt-2" *ngIf="nameNode==='IMAGE'">
+          <label  class="form-label">Results :</label>
+          {{sipmleResult}}
+        </div>
+        <!-- div DrugsResults -->
+        <div class="mt-2" *ngIf="nameNode==='DisplayResults'">
+          <label  class="form-label">Api :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.urlApi">
+          <div class="justify-content-end mt-3">
+            <button class="btn btn-primary  " (click)="ExecuteApi(urlApi)">See Result</button>
+          </div>
+        </div>
+        <!-- div  Query -->
+        <div class="mt-2" *ngIf="nameNode==='Query'">
+          <label  class="form-label">Query Name :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.queryName">
+          <label  class="form-label">Type :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.type">
+        </div>
+
+      </div>
+      <!-- footer buttons -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger"  data-bs-dismiss="modal" (click)="clearData()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modale properties new filter graphe -->
+<div class="modal fade" id="basicModal2" tabindex="-1" aria-hidden="true"
+     [ngClass]="{  'show':  idNode && !isSelectedNodeGSOrVersion && showNewGraphFilter }">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title " id="exampleModalLabel"> HIIIII</h4>
+        <!-- btn close -->
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="clearData()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        helloooooooooooo
+      </div>
+      <!-- footer buttons -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger"  data-bs-dismiss="modal" (click)="clearData()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- btn back to original graph -->
+<div   style="display: flex; justify-content: end; margin-top: 5px" *ngIf="showNewGraphFilter">
+  <button class="btn btn-outline-danger mt-1 "  (click)="toggleGraphFilter();clearData()">Back To GS</button>
+</div>
+<!-- show properties in new graphe !-->
+<div #NewgraphContainer class="graph-container" [class.showgraph]="showNewGraphFilter" [class.hidegraph]="showGraph"></div>
+
+<div #graphContainer class="graph-container" [class.showgraph]="showGraph" [class.hidegraph]="showNewGraphFilter"></div>
+

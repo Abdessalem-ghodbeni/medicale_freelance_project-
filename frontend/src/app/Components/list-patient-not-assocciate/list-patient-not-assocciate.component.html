@@ -1,0 +1,24 @@
+<h4 class="pb-1 mb-4 Styletitle">Patient Not Associate</h4>
+
+<div *ngIf="listPatient.length > 0; else emptyList" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+  <div class="col" style="height: 400px" *ngFor="let patient of listPatient">
+    <div class="card h-100">
+      <div class="card-body fiche_card">
+        <div>
+          <img src="assets/img/fiche.png" style="width: 190px;height: 190px" alt="Card image cap" />
+        </div>
+        <div class="namebtn">
+          <h5 class="card-title">{{patient.nom}} {{patient.prenom}}</h5>
+          <p class="card-text">
+            <button type="button" class="btn btn-info btnStyle" (click)="associatePatient(patient)">Associate</button>
+
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyList>
+  <p style="text-align: center; color: red; font-size: large">No patients found.</p>
+</ng-template>

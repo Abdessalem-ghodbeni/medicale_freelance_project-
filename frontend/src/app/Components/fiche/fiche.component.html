@@ -1,0 +1,192 @@
+<head>
+  <title>Fiche Patient</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<div class="row styleAddPatient">
+  <div class="col-12">
+<!-- all content-->
+    <div class="app-brand justify-content-center">
+      <img src="assets/img/log1.png" alt="logo" width="20%" height="10%" />
+    </div>
+    <!-- /Logo -->
+    <h4 class="mb-2">New Patient</h4>
+    <form   class="mb-3" (ngSubmit)="onSubmit()" [formGroup]="formService.formGroupPatient">
+      <!-- Name -->
+      <div class="form-group mb-3">
+        <label for="prenom" class="form-label">Name </label>
+        <input
+          type="text"
+           class="form-control"
+           id="prenom"
+           formControlName="prenom"
+           name="prenom"
+           placeholder="Enter name patient"
+           autofocus
+           [ngClass]="{ 'is-invalid':formService.prenom && formService.prenom.errors && formService.prenom.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="formService.prenom && formService.prenom.errors">
+          <div *ngIf="formService.prenom.errors.required">Please enter name patient*</div>
+          <div *ngIf="formService.prenom.errors.minlength">Name patient must be at least 3 characters long*</div>
+          <div *ngIf="formService.prenom.errors.maxlength">Name patient cannot exceed 50 characters*</div>
+        </div>
+      </div>
+      <!-- Family Name -->
+      <div class="form-group mb-3">
+        <label for="nom" class="form-label">Family Name </label>
+        <input
+          type="text"
+          class="form-control"
+          id="nom"
+          formControlName="nom"
+          name="nom"
+          placeholder="Enter family name patient"
+          autofocus
+          [ngClass]="{ 'is-invalid':formService.nom && formService.nom.errors && formService.nom.touched}"
+        >
+        <div class="invalid-feedback" *ngIf="formService.nom && formService.nom.errors">
+                    <div *ngIf="formService.nom.errors.required"> Please enter family name of patient*</div>
+                    <div *ngIf="formService.nom.errors.minlength">Name patient must be at least 3 characters long*</div>
+                    <div *ngIf="formService.nom.errors.maxlength">Name patient cannot exceed 80 characters*</div>
+                  </div>
+
+                </div>
+      <!-- Age -->
+      <div class="form-group mb-3">
+                  <label for="age" class="form-label">Age </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="age"
+                    formControlName="age"
+                    name="age"
+                    placeholder="Enter age patient"
+                    autofocus
+                    [ngClass]="{ 'is-invalid':formService.age && formService.age.errors && formService.age.touched}"
+                  >
+                  <div class="invalid-feedback" *ngIf="formService.age && formService.age.hasError('required')">
+                    Please enter age patient *
+                  </div>
+                  <div class="invalid-feedback" *ngIf="formService.age && formService.age.hasError('pattern')">
+                    The age must be digits*
+                  </div>
+
+                </div>
+      <!-- Gender -->
+      <div class="form-group mb-4 mt-4 row">
+                  <label  class="form-label col-4">Gender </label>
+                  <div class="col-4"
+                       style="font-size: 1rem;
+                   line-height: 1.53;
+                   color: #697a8d;">
+                    <!-- women -->
+                    <input
+                      name="sexe"
+                      id="Femme"
+                      class="form-check-input m-1"
+                      type="radio"
+                      value="F"
+                      [checked]="sexe === 'Female'"
+                      (change)=" sexe = 'Female'; isGenderSelected = true;"
+                    />
+                    <label class="form-check-label " for="Femme"> Women </label>
+                  </div>
+                  <div class="col-4"style="font-size: 1rem;
+                   line-height: 1.53;
+                   color: #697a8d;"
+                  >
+                    <!-- Men -->
+                    <input
+                      name="sexe"
+                      class="form-check-input m-1 "
+                      type="radio"
+                      value="H"
+                      id="Homme"
+                      [checked]="sexe === 'Male'"
+                      (change)=" sexe = 'Male'; isGenderSelected = true;"
+                    />
+                    <label class="form-check-label" for="Homme"> Man </label>
+                  </div>
+                </div>
+
+      <!-- Tel -->
+      <div class="form-group mb-3">
+                  <label for="tel" class="form-label">Phone Number </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="tel"
+                    formControlName="tel"
+                    name="tel"
+                    placeholder="Enter phone patient"
+                    autofocus
+                    [ngClass]="{ 'is-invalid':formService.tel && formService.tel.errors && formService.tel.touched}"
+                  >
+                  <div class="invalid-feedback" *ngIf="formService.tel && formService.tel.hasError('required')">
+                    Please enter phone patient*
+                  </div>
+                  <div class="invalid-feedback" *ngIf="formService.tel && formService.tel.hasError('pattern')">
+                    The phone number must be 8 digits*
+                  </div>
+
+                </div>
+      <!-- Email -->
+      <div class="form-group mb-3">
+        <label for="emailPatient" class="form-label">Email </label>
+        <input
+          type="text"
+          class="form-control"
+          id="emailPatient"
+          formControlName="emailPatient"
+          name="emailPatient"
+          placeholder="Enter email patient"
+          autofocus
+          [ngClass]="{ 'is-invalid':formService.emailPatient && formService.emailPatient.errors && formService.emailPatient.touched}"
+        >
+        <div class="invalid-feedback" *ngIf="formService.emailPatient && formService.emailPatient.hasError('required')">
+          Please enter email patient*
+        </div>
+
+      </div>
+
+      <!-- address -->
+      <div class="form-group mb-3">
+                  <label for="adresse" class="form-label">Address </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="adresse"
+                    formControlName="adresse"
+                    name="adresse"
+                    placeholder="Enter address patient"
+                    autofocus
+                    [ngClass]="{ 'is-invalid':formService.adresse && formService.adresse.errors && formService.adresse.touched}"
+                  />
+                  <div class="invalid-feedback" *ngIf="formService.adresse && formService.adresse.hasError('required')">
+                    Please enter address patient*
+                  </div>
+                </div>
+
+      <div class="text-center">
+                  <div class="row">
+                    <div class="m-1">
+                      <button type="submit" class="btn btn-outline-success btn-block col-5 m-1" >Save</button>
+                      <button type="button" (click)="onCancel()" class="btn btn-outline-danger btn-block  col-5 m-1">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+</div>
+<div class="alert-container">
+  <!-- Alert success -->
+  <div class="alert alert-success" role="alert" *ngIf="showsuccessmessage">save successfuly! </div>
+  <!-- Alert error -->
+  <div class="alert alert-danger" role="alert" *ngIf="showerrormessage">Please check your information and try again.</div>
+
+</div>
+          <!-- Register Card -->
+<!-- / Content -->

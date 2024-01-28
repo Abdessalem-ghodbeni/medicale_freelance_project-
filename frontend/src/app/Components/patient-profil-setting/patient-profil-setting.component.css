@@ -1,0 +1,23 @@
+/* Add custom CSS styles to align the alerts to the top left */
+.alert-container {
+  position: fixed;
+  top: 1%; /* Adjust the top position as needed */
+  right: 0;
+  transform: translateY(50%);
+  z-index: 9999; /* Ensure the alerts appear on top of other elements */
+}
+
+.alert {
+  min-width: 400px; /* Set the minimum width of the alerts */
+  max-width: 600px; /* Set the maximum width of the alerts */
+  margin-left: 20px; /* Add some spacing between the alerts and the left side of the screen */
+  margin-right: 8px;
+}
+
+/* Optional: Add styles for the alert content (e.g., padding, border-radius, etc.) */
+.alert-success,
+.alert-danger {
+  padding: 8px;
+  border-radius: 5px;
+  /* Add more styles as needed */
+}

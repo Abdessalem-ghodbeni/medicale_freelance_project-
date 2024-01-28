@@ -1,0 +1,72 @@
+.graph-container {
+  height: 100vh;
+  width: 100vw;
+}
+h2{
+  text-align: center;
+  margin-top: 5px;
+  ;
+}
+.showgraph {
+  display: block;
+}
+
+.hidegraph {
+  display: none;
+}
+.modal{
+  position: fixed;
+  top: 10px;
+  left: 0;
+  z-index: 1090;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+  border-radius: 20px;
+}
+.hidemodale{
+  display: none;
+}
+.showbtn {
+  display: block;
+}
+.hidebtn {
+  display: none;
+}
+.text-nowrap {
+  white-space: nowrap !important;
+}
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-color: #697a8d;
+  --bs-table-striped-bg: #f9fafb;
+  --bs-table-active-color: #697a8d;
+  --bs-table-active-bg: rgba(67, 89, 113, 0.1);
+  --bs-table-hover-color: #697a8d;
+  --bs-table-hover-bg: rgba(67, 89, 113, 0.06);
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #697a8d;
+  vertical-align: middle;
+  border-color: #d9dee3;
+}
+table {
+  caption-side: bottom;
+  border-collapse: collapse;
+}
+table {
+  display: table;
+  border-collapse: separate;
+  box-sizing: border-box;
+  text-indent: initial;
+  border-spacing: 2px;
+  border-color: gray;
+}

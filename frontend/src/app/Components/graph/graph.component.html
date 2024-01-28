@@ -1,0 +1,891 @@
+<!-- Annonce / warning  Btn-->
+<div
+  class="bs-toast toast toast-placement-ex m-2 fade bg-warning bottom-0 end-0 show"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true">
+  <!--
+    data-delay="2000"
+  -->
+
+  <div class="toast-header headerToast">
+    <i class="bx bx-bell me-2"></i>
+    <div class="me-auto fw-semibold">Announcement</div>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    <div style="padding: 2px">
+      To add a new analysis you must select a node before clicking on the add button.
+      <br>
+      To summarize please select more than one node
+      <br>
+      <h6 class="mt-1"> Do not forget !</h6>
+    </div>
+  </div>
+</div>
+<!-- fin Annonce / warning  Btn-->
+<!-- btn add analyse + see details -->
+<div style="display: flex; justify-content: space-between;">
+  <button type="button"
+          class="btn btn-outline-info"
+          data-bs-toggle="modal"
+          data-bs-target="#basicModal"
+          style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+          [ngClass]="{'showbtn': isButtonShow  && sourceNodeId , 'hidebtn': !isButtonShow||showGraphLoading||showNewGraphFilter }"
+          data-toggle="modal"
+          aria-hidden="true"
+          data-target="#newNodeModal"
+          (click)="openNewAnalysisModal()">
+    <i class="fa-regular fa-plus"></i>
+    New Analyse
+  </button>
+  <button type="button"
+          class="btn btn-outline-info"
+          data-bs-toggle="modal"
+          data-bs-target="#basicModal2"
+          style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+          [ngClass]="{'showbtn': isButtonShow, 'hidebtn': !isButtonShow||showGraphLoading}"
+          data-toggle="modal"
+          aria-hidden="true"
+          data-target="#newNodeModal"
+          (click)="openNPropertiesModal()"
+  >
+    <i class="fa-regular fa-eye"></i>
+    See Details
+  </button>
+</div>
+<!-- fin btn add analyse  see details -->
+<!-- btn filter -->
+<div class="mt-3"  style="display: flex; justify-content: space-between;">
+  <button
+    class="btn btn-outline-primary"
+    type="button"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#offcanvasEnd"
+    aria-controls="offcanvasEnd"
+    [ngClass]="{'showbtn': showGraph, 'hidebtn': !showGraph||showGraphLoading}"
+    (click)="CancelFilter();initializeData()"
+
+  >
+  Structural Summarization 
+  </button>
+  <button class="btn btn-outline-primary" type="button"
+          data-bs-target="#modalToggle5"
+          data-bs-toggle="modal"
+          (click)="showAlgorithmModaleExtractiveAndAbstractive()"
+          [ngClass]="{'showbtn': showGraph, 'hidebtn': !showGraph||showGraphLoading}"
+
+  >
+    Summarize
+  </button>
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd" aria-labelledby="offcanvasEndLabel" aria-hidden="true" style="visibility: hidden;width:auto" >
+    <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title"><i class="fa-solid fa-filter"></i> Filter </h5>
+
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="initializeData()"></button>
+    </div>
+    <div class="offcanvas-body flex-grow-0">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="nav-link active"
+                  role="tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#navs-top-home"
+                  aria-controls="navs-top-home"
+                  aria-selected="true"
+                >
+                  Node Name
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="nav-link"
+                  role="tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#navs-top-type"
+                  aria-controls="navs-top-type"
+                  aria-selected="false"
+                >
+                 Node Type
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="nav-link"
+                  role="tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#navs-top-display"
+                  aria-controls="navs-top-display"
+                  aria-selected="false"
+                >
+                  display
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="nav-link"
+                  role="tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#navs-top-profile"
+                  aria-controls="navs-top-profile"
+                  aria-selected="false"
+                >
+                  Attributes
+                </button>
+              </li>
+     
+            </ul>
+            <div class="tab-content">
+              <!-- zone filter Structural -->
+              <div class="tab-pane fade show active" id="navs-top-home" role="tabpanel">
+                   <div >
+                      <div>
+                        <label for="listNodesNamesFILTER" class="form-label">Select Nodename:</label>
+                        <select [(ngModel)]="selectedNodeName" (change)="nodeNamesSelected($event.target.value)" class="form-select" id="listNodesNamesFILTER">
+                          <option value=""></option>
+                          <option *ngFor="let nodeName of listNodesNames" [value]="nodeName">{{ nodeName }}</option>
+                        </select>
+                      </div>
+                      <div  class="mb-3 ">
+                        <label for="year" class="form-label">Year :</label>
+                        <input type="text" placeholder="Exemple: 2023   " class="form-control col-6" id="year"
+                               [(ngModel)]="year" name="year">
+                      </div>
+
+                     <div class="mb-3" *ngFor="let monthIndex of getMonthCountArray(); let i = index">
+                        <label for="month{{ monthIndex }}" class="form-label">Month {{ monthIndex }}:</label>
+                        <input type="text" placeholder="Exemple: 09" class="form-control col-6" id="month{{ monthIndex }}"
+                               [(ngModel)]="monthValues[i]" name="month{{ monthIndex }}">
+                      </div>
+
+                      <div  class="mb-3 mt-2">
+                        <button type="button" class="btn btn-outline-primary float-end" (click)="addMonth()">
+                          <span class="tf-icons bx bx-plus"></span>&nbsp; Add Month
+                        </button>
+                      </div>
+                        <br>
+                    <div class="mt-5 d-flex justify-content-end row ">
+                      <button type="button" (click)="ApplyFilter()" class="btn btn-outline-primary col-6 ">Filter</button>
+                      <button type="button" (click)="CancelFilter()" class="btn btn-outline-danger col-5 mx-2" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                    </div>
+
+              </div>
+              <!-- zone filter type -->
+              <div class="tab-pane fade " id="navs-top-type" role="tabpanel">
+                <div >
+                  <div>
+                    <label for="listNodesNamesFILTER" class="form-label">Select Type :</label>
+                    <select [(ngModel)]="typeSelectedforFiler" (change)="selectType($event.target.value)" class="form-select" id="listtypeFILTER">
+                      <option value=""></option>
+                      <option value="numeric">numeric</option>
+                      <option value="string">string</option>
+                      <option value="file">file</option>
+                      <option value="image">image</option>
+                      <option value="video">vidéo</option>
+
+                    </select>
+                  </div>
+                  <div  class="mb-3 ">
+                    <label for="year" class="form-label">Year :</label>
+                    <input type="text" placeholder="Exemple: 2023   " class="form-control col-6" id="year"
+                           [(ngModel)]="year" name="year">
+                  </div>
+
+                  <div class="mb-3" *ngFor="let monthIndex of getMonthCountArray(); let i = index">
+                    <label for="month{{ monthIndex }}" class="form-label">Month {{ monthIndex }}:</label>
+                    <input type="text" placeholder="Exemple: 09" class="form-control col-6" id="month{{ monthIndex }}"
+                           [(ngModel)]="monthValues[i]" name="month{{ monthIndex }}">
+                  </div>
+
+                  <div  class="mb-3 mt-2">
+                    <button type="button" class="btn btn-outline-primary float-end" (click)="addMonth()">
+                      <span class="tf-icons bx bx-plus"></span>&nbsp; Add Month
+                    </button>
+                  </div>
+                  <br>
+                  <div class="mt-5 d-flex justify-content-end row ">
+                    <button type="button" (click)="filterType()" class="btn btn-outline-primary col-6 ">Filter</button>
+                    <button type="button" (click)="CancelFilter()" class="btn btn-outline-danger col-5 mx-2" data-bs-dismiss="offcanvas">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              <!-- zone filter display -->
+              <div class="tab-pane fade " id="navs-top-display" role="tabpanel">
+                <div >
+                  <div *ngFor="let typeIndex of getTypeCountArray(); let i = index">
+                    <label for="Type{{ typeIndex }}" class="form-label">Type {{typeIndex}} :</label>
+                    <select (change)="selectType($event.target.value)" class="form-select" id="type{{typeIndex}}" [(ngModel)]="typesValues[i]" name="type{{typeIndex}}">
+                      <option value=""></option>
+                      <option value="numeric">numeric</option>
+                      <option value="string">string</option>
+                      <option value="file">file</option>
+                      <option value="image">image</option>
+                      <option value="video">vidéo</option>
+                    </select>
+                  </div>
+                  <div  class="mb-3 mt-2">
+                    <button type="button" class="btn btn-outline-primary float-end mb-2" (click)="addType()">
+                      <span class="tf-icons bx bx-plus"></span>&nbsp; Add Type
+                    </button>
+                  </div>
+
+                  <div  class="mb-3 ">
+                    <label for="year" class="form-label">Year :</label>
+                    <input type="text" placeholder="Exemple: 2023   " class="form-control col-6" id="year2"
+                           [(ngModel)]="year" name="year">
+                  </div>
+
+                  <div class="mb-3" *ngFor="let monthIndex of getMonthCountArray(); let i = index">
+                    <label for="month{{ monthIndex }}" class="form-label">Month {{ monthIndex }}:</label>
+                    <input type="text" placeholder="Exemple: 09" class="form-control col-6" id="month{{ monthIndex }}"
+                           [(ngModel)]="monthValues[i]" name="month{{ monthIndex }}">
+                  </div>
+
+                  <div  class="mb-3 mt-2">
+                    <button type="button" class="btn btn-outline-primary float-end" (click)="addMonth()">
+                      <span class="tf-icons bx bx-plus"></span>&nbsp; Add Month
+                    </button>
+                  </div>
+                  <br>
+                  <div class="mt-5 d-flex justify-content-end row ">
+                    <button type="button" (click)="displayFilter()" class="btn btn-outline-primary col-6 ">Filter</button>
+                    <button type="button" (click)="CancelFilter()" class="btn btn-outline-danger col-5 mx-2" data-bs-dismiss="offcanvas">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              <!-- zone filter diseases -->
+              <div class="tab-pane fade" id="navs-top-profile" role="tabpanel">
+
+                <div>
+                  <label for="listOrdonance" class="form-label">Select Nodename:</label>
+                  <select (change)="ordonance($event.target.value)" class="form-select" id="listOrdonance">
+                    <option value=""></option>
+                    <option value="diabetes">diabetes</option>
+                    <option value="hypertension">hypertension</option>
+                    <option value="asthma">asthma</option>
+                    <option value="cancer">cancer</option>
+                    <option value="depression">depression</option>
+                    <option value="arthritis">arthritis</option>
+                    <option value="migraine">migraine</option>
+                  </select>
+                </div>
+                <div class="mt-5 d-flex justify-content-end row ">
+                  <button type="button" (click)="ApplyFilterOdronnance()" class="btn btn-outline-primary col-6 ">Filter</button>
+                  <button type="button" (click)="CancelFilter()" class="btn btn-outline-danger col-5 mx-2" data-bs-dismiss="offcanvas">Cancel</button>
+                </div>
+              </div>
+             
+            </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas2" aria-labelledby="offcanvasEndLabel" aria-hidden="true" style="visibility: hidden;width:auto; width: 450px !important;" >
+    <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title"><i class="fa-solid fa-filter"></i> Filter </h5>
+
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" (click)="initializeData()"></button>
+    </div>
+    <div class="offcanvas-body flex-grow-0">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="nav-link active"
+                  role="tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#navs-top-scanAllFiles"
+                  aria-controls="navs-top-scanAllFiles"
+                  aria-selected="true"
+                >
+                Text Summarization
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <!-- zone filter scan all files -->
+              <div class="tab-pane fade show active" id="navs-top-scanAllFiles" role="tabpanel">
+                <div>
+                  <label for="listAlgo" class="form-label">Choose an Algorithm :</label>
+                  <select (change)="listAlgo($event.target.value)" class="form-select" id="listAlgo">
+                    <option value=""></option>
+                    <option value="LDA">LDA</option>
+                    <option value="HLDA">HLDA</option>
+                    <option value="NMF">CTM</option>
+                  </select>
+                </div>
+                <div class="mt-5 d-flex justify-content-end row ">
+                  <button type="button" (click)="ScanAllFiles()" class="btn btn-outline-primary col-6 ">Scan</button>
+                  <button type="button" (click)="CancelFilter()" class="btn btn-outline-danger col-5 mx-2" data-bs-dismiss="offcanvas">Cancel</button>
+
+                </div>
+              </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3" style="display: flex; justify-content: start;">
+  <button
+    class="btn btn-outline-primary"
+    type="button"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#offcanvas2"
+    aria-controls="offcanvas2"
+    [ngClass]="{'showbtn': showGraph, 'hidebtn': !showGraph||showGraphLoading}"
+    (click)="CancelFilter();initializeData()"
+
+  >
+  Based Content Summarization
+  </button>
+</div>
+<!-- fin btn filter -->
+<!-- btn show original graph -->
+<div   style="display: flex; justify-content: end; margin-top: 5px" *ngIf="showNewGraphFilter || showGraphLoading  && (!showGraph || !btnShowOriginGraph)">
+<button class="btn btn-outline-danger mt-1 "  (click)="toggleGraphFilter(true,false,false);initializeData()">Show Original Graph</button>
+</div>
+<!-- end  btn show original graph -->
+<!-- Modal  new analyse -->
+<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true"
+     [ngClass]="{ 'show': isShowModal && !isEmpty && sourceNodeId }">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel1"> New Analyse</h5>
+        <!-- btn close -->
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="clearData()"
+        >
+
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- selected source-->
+        <div class="mb-3" *ngIf="sourceNodeId">
+          <label for="analyse-type" class="form-label" style="color: green"> Successfully selected node
+            <i class="fa-solid fa-check"></i>
+          </label>
+        </div>
+        <div class="mb-3" *ngIf="!sourceNodeId">
+          <label for="analyse-type" class="form-label" style="color: red"> There is no node selected yet
+            <i class="fa-solid fa-xmark"></i>
+          </label>
+        </div>
+        <div>
+          <label for="listNodesNames" class="form-label">Select Nodename:</label>
+          <select [(ngModel)]="selectedNodeName" (change)="nodeNamesSelected($event.target.value)" class="form-select" id="listNodesNames">
+            <option value=""></option>
+            <option *ngFor="let nodeName of listNodesNames" [value]="nodeName">{{ nodeName }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="listRelationshipNames" class="form-label">Select Relationship Name:</label>
+          <select [(ngModel)]="selectedRelationName"  (change)="relationNameSelected($event.target.value)" class="form-select" id="listRelationshipNames">
+            <option value=""></option>
+            <option *ngFor="let relationName of listRelationshipeNames" [value]="relationName">{{ relationName }}</option>
+          </select>
+        </div>
+        <!-- type analyse -->
+        <div class="mb-3">
+          <label for="analyse-type" class="form-label">Choisir le type d'analyse :</label>
+          <select class="form-select" id="analyse-type" [(ngModel)]="selectedType"
+                  (change)="onTypeChange()"
+                  aria-label="Choisir le type d'analyse">
+            <option value="1">Numeric</option>
+            <option value="2">String</option>
+            <option value="3">Image</option>
+            <option value="4">Video</option>
+            <option value="5">File Doc</option>
+          </select>
+        </div>
+        <!-- fin type analyse -->
+
+        <!--  Node Destination  -->
+        <div *ngIf="selectedType === '1'" class="mb-3 ">
+          <label for="valeurMesurer" class="form-label">Value of measure:</label>
+          <input type="text" placeholder="Exemple: 1,41 g   " class="form-control col-6" id="valeurMesurer" required
+                 [(ngModel)]="valeurMesurer" name="mesure">
+          <div class="invalid-feedback">Please enter the measurement value</div>
+        </div>
+        <div *ngIf="selectedType === '2'" class="mb-3">
+          <label for="text" class="form-label">Text :</label>
+          <input type="text" placeholder="Exemple: 1,41 g   " class="form-control col-6" id="text" required
+                 [(ngModel)]="valeurMesurer" name="text">
+          <div class="invalid-feedback">Please enter the text</div>
+        </div>
+        <div *ngIf="selectedType === '3'" class="mb-3">
+          <label for="image" class="form-label">Select an image:</label>
+          <input type="file" class="form-control" id="image" required (change)="onInputChange($event)" name="image">
+          <div class="invalid-feedback">Please select a valid image.</div>
+        </div>
+        <div *ngIf="selectedType === '4'" class="mb-3">
+          <label for="video" class="form-label">Select video:</label>
+          <input type="file" class="form-control" id="video" required (change)="onInputChange($event)" name="video">
+          <div class="invalid-feedback">Please select a valid video.</div>
+        </div>
+        <div *ngIf="selectedType === '5'" class="mb-3">
+          <label for="file" class="form-label">Select file:</label>
+          <input type="file" class="form-control" id="file" required (change)="onInputChange($event)" name="file">
+          <div class="invalid-feedback">Please select a valid file.</div>
+        </div>
+       <!-- date-->
+        <div  class="mb-3 ">
+          <label for="date" class="form-label">Date :</label>
+          <input type="date" placeholder="Exemple:jj/mm/annn   " class="form-control col-6" id="date" required
+                 [(ngModel)]="date" name="date">
+          <div class="invalid-feedback">Veuillez saisir le date jj/mm/annn*</div>
+        </div>
+      </div>
+      <!-- footer buttons -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-success" (click)="saveData()" data-bs-dismiss="modal">Save</button>
+        <button type="button" class="btn btn-outline-danger" (click)="clearData()" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal show properties -->
+<div class="modal fade" id="basicModal2" tabindex="-1" aria-hidden="true"
+     [ngClass]="{  'show': isShowModal && !isEmpty && sourceNodeId}">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title " style="text-align: center; color: #03b0d4" id="exampleModalLabel2"> {{this.nameSelectedInformation}}</h3>
+        <!-- btn close -->
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="clearData()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- scan all file value result =1 -->
+        <div class="mb-3" *ngIf="valueResult===1">
+
+          <!-- div label resultat scan 1 file -->
+          <div  *ngIf="(nameSelectedInformation==='Results')">
+            <!-- LDA -->
+
+            <div *ngIf="algoTrainingScan==='LDA'">
+
+              <div *ngFor="let entry of resultatFilter | keyvalue;let index=index">
+                <h4 class="mt-3 mb-2">Document : {{ index+1 }}</h4>
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Keyword</th>
+                    <th>Percentage</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let keywordObj of entry.value[0]">
+                    <td>{{ keywordObj.keyword }}</td>
+                    <td>{{ keywordObj.percentage }}%</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+<!--              <table class="table table-responsive">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                  <th class="index-column">Array Index</th>-->
+<!--                  <th>Keywords</th>-->
+<!--                  <th>Percentages</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody class="table-border-bottom-0">-->
+<!--                <ng-container *ngFor="let fileResult of resultatFilter; let fileIndex = index">-->
+<!--                  <ng-container *ngFor="let arrayItem of fileResult; let itemIndex = index">-->
+<!--                    <tr *ngIf="itemIndex === 0">-->
+<!--                      <td class="index-column" [attr.rowspan]="fileResult.length">{{ fileIndex }}</td>-->
+<!--                      <td>-->
+<!--                        <ul class="keyword-list">-->
+<!--                          <li *ngFor="let subItem of arrayItem">-->
+<!--                            {{ subItem.keyword }}-->
+<!--                          </li>-->
+<!--                        </ul>-->
+<!--                      </td>-->
+<!--                      <td>-->
+<!--                        <ul class="percentage-list">-->
+<!--                          <li *ngFor="let subItem of arrayItem">{{ subItem.percentage }}%</li>-->
+<!--                        </ul>-->
+<!--                      </td>-->
+<!--                    </tr>-->
+<!--                  </ng-container>-->
+<!--                </ng-container>-->
+<!--                </tbody>-->
+<!--              </table>-->
+            </div>
+            <!-- NMF -->
+            <div  *ngIf="algoTrainingScan === 'NMF'" >
+              <table class="table table-responsive" >
+                <thead>
+                <tr>
+                  <th>Result</th>
+                  <th>Array</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                <ng-container *ngFor="let item of resultatFilter; let i = index">
+                  <tr *ngFor="let subItem of item; let j = index">
+                    <td *ngIf="j === 0" [attr.rowspan]="item.length"><strong>{{ i }}</strong></td>
+                    <td>{{ subItem }}</td>
+                  </tr>
+                </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div  class="mb-3 " *ngIf="!(nameSelectedInformation==='Document') && !(nameSelectedInformation==='Results')&& !(nameSelectedInformation==='PATIENT')&& !(nameSelectedInformation==='DRUG')">
+          <label  class="form-label">Date :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.dateSelectedInformation">
+        </div>
+        <div  class="mb-3 " *ngIf="showvalueinput && !(nameSelectedInformation==='Document') && !(nameSelectedInformation==='Results')&& !(nameSelectedInformation==='PATIENT')&& !(nameSelectedInformation==='DRUG')">
+          <label  class="form-label">Measured value :</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.valueSelectedInformation">
+        </div>
+        <!-- ordonnance -->
+        <div  class="mb-3 " *ngIf="showvalueinput && nameSelectedInformation==='DRUG'">
+          <label  class="form-label">Name</label>
+          <input type="text"  class="form-control col-6" readonly [value]="this.nodeSelectedInformation.properties.name">
+        </div>
+        <div  class="mb-3 " *ngIf="showFileinput">
+          <label  class="form-label">Url File :   </label>
+          <a [href]="this.urlSelectedInformation" target="_blank">
+            {{this.urlSelectedInformation}}
+          </a>
+        </div>
+        <!-- valueresultat =6 labelle resultat du api nemeric summerize :tree based... abstracteve algo  -->
+        <div class="mb-3" *ngIf="(nameSelectedInformation === 'Results') && valueResult === 6 ">
+          <div *ngFor="let entry of resultatFilter | keyvalue; let index = index">
+            <h4 class="mt-3">Document : {{ index + 1 }}</h4>
+            <ul class="list-group mt-1">
+              <li *ngFor="let value of entry.value" class="list-group-item">{{ value }}</li>
+            </ul>
+          </div>
+        </div>
+        <!-- valueresultat =7 labelle resultat du api nemeric summerize :lda,nmf... extractive algo  -->
+        <div class="mb-3" *ngIf="valueResult===7">
+          <div  *ngIf="(nameSelectedInformation==='Results')">
+            <!-- LDA -->
+            <div *ngIf="algoTrainingScan==='LDA'">
+              <div *ngFor="let entry of resultatFilter | keyvalue;let index=index">
+                <h4 class="mt-3 mb-2">Document : {{ index+1 }}</h4>
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Keyword</th>
+                    <th>Percentage</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let keywordObj of entry.value[0]">
+                    <td>{{ keywordObj.keyword }}</td>
+                    <td>{{ keywordObj.percentage }}%</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- NMF -->
+            <div  *ngIf="algoTrainingScan === 'NMF'" >
+              <div *ngFor="let entry of resultatFilter | keyvalue">
+                <h4 class="mt-2 mb-2">Result : {{ entry.key }}</h4>
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Keywords</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let keywordList of entry.value">
+                    <td>
+                      <ul class="list-group">
+                        <li *ngFor="let keyword of keywordList" class="list-group-item">{{ keyword }}</li>
+                      </ul>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--excel summerize -->
+        <div class="mb-3" *ngIf="showExcelSummarize">
+
+          <div  class="mb-3 ">
+            <label  class="form-label">Patient :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.patientNAME">
+          </div>
+          <div  class="mb-3 ">
+            <label  class="form-label">Mesure of :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.mesureOf">
+          </div>
+          <div  class="mb-3 ">
+            <label  class="form-label" *ngIf="typeExcelSummarize==='min'">Minimum Value :</label>
+            <label  class="form-label" *ngIf="typeExcelSummarize==='max'">Maximum Value :</label>
+            <label  class="form-label" *ngIf="typeExcelSummarize==='avg'">Average Value :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.valueSelectedInformation">
+          </div>
+          <div  class="mb-3 ">
+            <label  class="form-label">Date :</label>
+            <input type="text"  class="form-control col-6" readonly [value]="this.dateSelectedInformation">
+          </div>
+        </div>
+        <!-- url new graphe  label Document  -->
+        <div  class="mb-2 " *ngIf="(nameSelectedInformation==='Document') ">
+          <label  class="form-label">Url File :   </label>
+          <a [href]="this.NewGrapheUrlSelectedInformation" target="_blank">
+            {{this.NewGrapheUrlSelectedInformation}}
+          </a>
+        </div>
+        <!-- affichage scan one file label "resultat"  -->
+        <div class="mb-3" *ngIf="valueResult===3">
+          <!-- div label resultat scan 1 file -->
+          <div  *ngIf="(nameSelectedInformation==='Results')">
+            <!-- LDA -->
+            <div *ngIf="algoTrainingScan==='LDA'">
+            <table class="table table-responsive " >
+              <thead>
+              <tr>
+                <th class="index-column">Index</th>
+                <th>Keywords</th>
+                <th>Percentages</th>
+              </tr>
+              </thead>
+              <tbody class="table-border-bottom-0">
+              <ng-container *ngFor="let item of Object.entries(resultatFilter)">
+                <tr>
+                  <td class="index-column" rowspan="{{ item[1].length }}"><strong> {{ item[0] }}</strong></td>
+                  <td>
+                    <ul class="keyword-list">
+                      <li *ngFor="let subItem of item[1]">
+                        {{ subItem.keyword }}
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul class="percentage-list">
+                      <li *ngFor="let subItem of item[1]">
+                        {{ subItem.percentage }}%
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </ng-container>
+              </tbody>
+            </table>
+            </div>
+            <!-- NMF -->
+            <div  *ngIf="algoTrainingScan === 'NMF'" >
+            <table class="table table-responsive" >
+              <thead>
+              <tr>
+                <th>Result</th>
+                <th>Array</th>
+              </tr>
+              </thead>
+              <tbody class="table-border-bottom-0">
+              <ng-container *ngFor="let item of resultatFilter; let i = index">
+                <tr *ngFor="let subItem of item; let j = index">
+                  <td *ngIf="j === 0" [attr.rowspan]="item.length"><strong>{{ i }}</strong></td>
+                  <td>{{ subItem }}</td>
+                </tr>
+              </ng-container>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+        <!-- btn    Scan This File -->
+        <div  class="mb-3 text-end" *ngIf="showFileinput && urlSelectedInformation && urlSelectedInformation.length !== 0  && (valueSelectedInformation.endsWith('.pdf'))&& !(nameSelectedInformation=='prescription')">
+          <button type="button"
+                  style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+                  class="btn btn-outline-info "
+                  data-bs-toggle="collapse"
+                  data-bs-target="#multiCollapseExample2"
+                  aria-expanded="true"
+                  aria-controls="multiCollapseExample2"
+          >
+            Choose an algorithm
+          </button>
+          <div class="collapse  mt-2 mb-1" id="multiCollapseExample2" >
+            <label for="listAlgo2" class="form-label mt-1 float-start ">Choose an Extractive summarization Algorithm:</label>
+            <select (change)="listAlgo($event.target.value)" class="form-select mt-1 mb-1" id="listAlgo2" >
+              <option value=""></option>
+              <option value="LDA">LDA</option>
+              <option value="HLDA">HLDA</option>
+              <option value="NMF">CTM</option>
+            </select>
+            <button class="btn btn-outline-primary mt-3" (click)="ScanOneFile()" data-bs-dismiss="modal">
+              Analyse File
+            </button>
+          </div>
+        </div>
+        <!-- btn check cancer  -->
+        <div  class="mb-3 text-end" *ngIf="showFileinput &&typeSelectedInformation==='image'&& urlSelectedInformation && urlSelectedInformation.length !== 0  && (valueSelectedInformation.endsWith('.jpg')|| valueSelectedInformation.endsWith('.png')) && (this.nameSelectedInformation==='XRay' ||this.nameSelectedInformation==='Ultrasound' )">
+          <button type="button"
+                  style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+                  class="btn btn-outline-info "
+                  (click)="haveCancer()"
+                  data-bs-dismiss="modal" >
+            Check Cancer
+          </button>
+        </div>
+        <!-- btn show numeric summarize  xls  -->
+        <div  class="mb-3 text-end" *ngIf="showFileinput &&typeSelectedInformation==='file' && urlSelectedInformation && urlSelectedInformation.length !== 0  && valueSelectedInformation.endsWith('.xlsx') && (this.nameSelectedInformation==='Bloodsuggarlevels' ||this.nameSelectedInformation==='Bloodsuggarpressure' ||this.nameSelectedInformation==='temperature'  )" >
+          <button  type="button"
+                   style="color: #03c3ec; border-color: #03c3ec; background: transparent; font-family: inherit;"
+                   class="btn btn-outline-info "
+                   data-bs-target="#modalToggle5"
+                   data-bs-toggle="modal"
+                   data-bs-dismiss="modal"
+                   (click)="showExcelChooseAlgo()">
+            Show Numeric Summarize
+          </button>
+        </div>
+      </div>
+      <!-- footer buttons -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger"  data-bs-dismiss="modal" (click)="initializeData()" >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- choose algorithm modal -->
+<div class="modal fade " id="modalToggle5"  tabindex="-1" aria-hidden="true" [ngClass]="{ 'show': showResultSummarize,'hidemodale':!showResultSummarize }">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" *ngIf="!showSelectInModalChooseAlgorithm" style="color: #03c3ec; font-weight: bold;">Topic Modeling</h5>
+        <h5 class="modal-title" *ngIf="showSelectInModalChooseAlgorithm" style="color: #03c3ec; font-weight: bold;">Options</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+        <div *ngIf="!showSelectInModalChooseAlgorithm">
+          <div class="form-check">
+            <div class="row">
+              <div class="col">
+                <input name="default-radio-1" class="form-check-input" type="radio" value="1" id="defaultRadio1" [(ngModel)]="selectedOption">
+                <label class="form-check-label" for="defaultRadio1">Extractive Algorithm</label>
+              </div>
+              <div class="col">
+                <input name="default-radio-1" class="form-check-input" type="radio" value="2" id="defaultRadio2" [(ngModel)]="selectedOption">
+                <label class="form-check-label" for="defaultRadio2">Abstractive Algorithm</label>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 mt-2" *ngIf="selectedOption === '1'">
+            <label for="listAlgo4" class="form-label">Choose an Extractive summarization Algorithm:</label>
+            <select (change)="listAlgo($event.target.value)" class="form-select" id="listAlgo4">
+              <option value=""></option>
+              <option value="LDA">LDA</option>
+              <option value="HLDA">HLDA</option>
+              <option value="NMF">CTM</option>
+            </select>
+          </div>
+          <div class="mb-3 mt-2" *ngIf="selectedOption === '2'">
+            <label for="listAlgo3" class="form-label">Choose an Abstractive summarization Algorithm:</label>
+            <select (change)="listAlgAbstractive($event.target.value)" class="form-select" id="listAlgo3">
+              <option value=""></option>
+              <option value="TREE_BASED">TREE_BASED</option>
+              <option value="GRAPH_BASED_PG">GRAPH_BASED_PG</option>
+              <option value="GRAPH_BASED_TEXTRANK">GRAPH_BASED_TEXTRANK</option>
+            </select>
+          </div>
+        </div>
+        <!-- for chosse type de numeric summarization -->
+        <div *ngIf="showSelectInModalChooseAlgorithm">
+          <label for="listAlgo11" class="form-label">Choose an option:</label>
+          <select (change)="listTypeSummarize($event.target.value)" class="form-select" id="listAlgo11">
+            <option value=""></option>
+            <option value="min">Minimum</option>
+            <option value="max">Maximum</option>
+            <option value="avg">Average</option>
+            <option value="graphical">Graphical</option>
+          </select>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-primary" type="button" (click)="topicMultiple()"  *ngIf="selectedOption==='1'" data-bs-dismiss="modal">
+          <!--        Analyse Summarize 1-->
+          Analyse
+
+        </button>
+        <button class="btn btn-outline-primary" type="button" (click)="SummarizeNumeric()" *ngIf="selectedOption==='2'" data-bs-dismiss="modal">
+          <!--          Analyse Summarize 2-->
+          Analyse
+        </button>
+        <!-- btn for numeric summarization -->
+        <button class="btn btn-outline-primary" type="button" (click)="ExcelSummarize();showModale()" *ngIf="showSelectInModalChooseAlgorithm" data-bs-dismiss="modal">
+          <!--          Analyse Summarize 3-->
+          Analyse
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- alert -->
+<div class="alert-container">
+  <!-- Alert success -->
+  <div class="alert alert-success" role="alert" *ngIf="showsuccessmessage">Node add successfuly! </div>
+  <!-- Alert error -->
+  <div class="alert alert-danger" role="alert" *ngIf="showerrormessage">Please check information and try again.</div>
+
+</div>
+<!-- for show loading graphe -->
+<div>
+  <!-- loading -->
+  <div class="d-flex justify-content-center" *ngIf="loading && showGraphLoading && !queryKeyExiste" >
+    <h4>Loading...  </h4>
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+<!-- query done -->
+  <div class="d-flex justify-content-center mt-5" *ngIf="queryKeyExiste">
+    <h2>You have already done this analysis !</h2>
+  </div>
+  <!-- cancer result -->
+  <div class="d-flex justify-content-center mt-5" *ngIf="showResult && !queryKeyExiste && this.valueResult===2">
+    <h4> {{this.ResultHaveCancer}}</h4>
+  </div>
+  <!-- HLDA -->
+  <div *ngIf="(statusApi===400|| statusApi===500) && show === true" class="text-center mt-4">
+    <h3> No analysis! </h3>
+    <h4> This algorithm is not available for now ! </h4>
+  </div>
+  <!-- Graphical summarize excel file -->
+  <div  class="text-center mt-4" *ngIf="!loading && showExcelSummarize && typeExcelSummarize==='graphical'">
+    <h3> Based content summarization : numerical node </h3>
+    <app-linechart></app-linechart>
+
+    </div>
+</div>
+<!-- end for show loading graphe -->
+
+<div #NewgraphContainer class="graph-container" [class.showgraph]="showNewGraphFilter && !queryKeyExiste" [class.hidegraph]="queryKeyExiste || showGraph || showGraphLoading"></div>
+  <!-- Conteneur du graphique -->
+<div #graphContainer class="graph-container" [class.showgraph]="showGraph" [class.hidegraph]="showNewGraphFilter || showGraphLoading"></div>
+<div #graphLoading class="graph-container" [class.showgraph]="!queryKeyExiste" [class.hidegraph]="showGraph || showNewGraphFilter || queryKeyExiste ">
+
+</div>

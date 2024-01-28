@@ -1,0 +1,30 @@
+<h4 class="pb-1 mb-4 Styletitle">My Patient</h4>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  <div class="col" *ngFor="let patient of listPatient">
+    <div class="card h-100">
+      <div class="card-body fiche_card">
+        <div>
+          <img src="assets/img/fiche.png" style="width: 190px;height: 190px" alt="Card image cap" />
+        </div>
+        <div class="namebtn">
+          <h5 class="card-title">Patient: {{patient.nom}} {{patient.prenom}}</h5>
+          <p class="card-text">
+            <button
+              (click)="gotoGraphe(patient.id)"
+              type="button"
+              class="btn btn-info btnStyle">Data Graph</button>
+            <button
+            (click)="gotoGrapheSummarize(patient.id)"
+            type="button"
+            class="btn btn-info btnStyle">Graph Summary</button>
+            <button
+            (click)="gotoRDF(patient.id)"
+            type="button"
+            class="btn btn-info btnStyle">Generate RDF</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

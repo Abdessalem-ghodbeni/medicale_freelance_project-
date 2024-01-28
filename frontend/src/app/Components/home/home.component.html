@@ -1,0 +1,247 @@
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-content-navbar config">
+  <div class="layout-container">
+    <!-- Menu -->
+
+    <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+      <!-- logo doctor -->
+      <div *ngIf="ROLE === 'DOCTOR'" >
+      <div class="app-brand demo mb-1 mt-3" style="height: auto">
+        <img src="assets/img/log1.png" alt="logo" width="30%" />
+        <h5>Dr.<br> {{this.nom}} {{this.prenom}}</h5>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+          <i class="bx bx-chevron-left bx-sm align-middle"></i>
+        </a>
+      </div>
+      <div class="app-brand mt-2 mb-2" >
+        <p class=""> {{this.speciality}}</p>
+      </div>
+      </div>
+      <!-- fin logo doctor -->
+      <!-- logo patient  -->
+      <div *ngIf="ROLE === 'PATIENT'"style="margin-top: 5%">
+        <div class="app-brand demo mb-1" >
+          <img src="assets/img/ppp.png" alt="logo"  width="30%" />
+          <h5>{{this.patient.nom}} {{this.patient.prenom}}</h5>
+          <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+          </a>
+        </div>
+        <br>
+      </div>
+      <!-- fin logo patient-->
+
+      <div class="menu-inner-shadow" style="display: block;"></div>
+
+      <ul class="menu-inner py-1">
+
+        <!-- div Doctor aside -->
+        <div *ngIf="ROLE==='DOCTOR'">
+          <!-- Dashboard -->
+          <li class="menu-item active">
+            <a routerLink="dashboard" routerLinkActive class="nav-link collapsed menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Patients</span>
+          </li>
+          <li class="menu-item " >
+            <a routerLink="listPatient" routerLinkActive class="menu-link">
+              <i class='menu-icon tf-icons bx bx-library'></i>
+              <span>My Patients</span>
+            </a>
+          </li>
+          <li class="menu-item " >
+            <a routerLink="listPatientNotAssociate" routerLinkActive class="menu-link">
+              <i class='menu-icon tf-icons bx bx-search'></i>
+              <span>Patients not associate </span>
+            </a>
+          </li>
+          <li class="menu-item ">
+            <a routerLink="fiche" routerLinkActive class="menu-link">
+              <i class='menu-icon tf-icons bx bx-user-plus'></i>
+              <span>New Patient</span>
+            </a>
+          </li>
+          <!-- profil -->
+          <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Profil</span>
+          </li>
+          <li class="menu-item">
+            <a routerLink="Settings" routerLinkActive class="menu-link">
+              <i class='menu-icon tf-icons bx bx-cog'></i>
+              <span>Settings</span>
+            </a>
+          </li>
+          <!-- button logout -->
+          <li class="menu-item">
+            <a href="login" class="menu-link" (click)="logout()">
+              <i class='menu-icon tf-icons bx bx-log-out'></i>
+              <span>Log Out</span>
+            </a>
+          </li>
+        </div>
+        <!-- end doctor aside -->
+
+        <!-- div patient aside -->
+        <div *ngIf="ROLE==='PATIENT'">
+          <!-- Dashboard -->
+          <li class="menu-item active">
+            <a routerLink="dashboard" routerLinkActive class="nav-link collapsed menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <!-- profil -->
+          <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Profil</span>
+          </li>
+          <li class="menu-item ">
+            <a [routerLink]="'graph/'+id" routerLinkActive class="menu-link">
+              <i class='menu-icon tf-icons bx bx-file'></i>
+              <span>My Analyse File</span>
+            </a>
+          </li>
+
+          <!-- other -->
+          <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Others</span>
+          </li>
+          <li class="menu-item">
+            <a [routerLink]="'Settings/patient/'+id" routerLinkActive class="menu-link">
+              <i class='menu-icon tf-icons bx bx-cog'></i>
+              <span>Settings</span>
+            </a>
+          </li>
+          <!-- button logout -->
+          <li class="menu-item">
+            <a href="login" class="menu-link" (click)="logout()">
+              <i class='menu-icon tf-icons bx bx-log-out'></i>
+              <span>Log Out</span>
+            </a>
+          </li>
+        </div>
+        <!-- end patient aside -->
+
+      </ul>
+    </aside>
+    <!-- / Menu -->
+
+    <!-- Layout container -->
+    <div class="layout-page">
+      <!-- Navbar -->
+      <nav
+        class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+        id="layout-navbar"
+      >
+        <!-- menu btn-->
+        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+          <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+            <i class="bx bx-menu bx-sm"></i>
+          </a>
+        </div>
+
+        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+          <!-- Search -->
+          <div class="navbar-nav align-items-center" *ngIf="isSearchEnabled()">
+            <div class="nav-item d-flex align-items-center">
+              <i class="bx bx-search fs-4 lh-0"></i>
+              <input
+                type="text"
+                class="form-control border-0 shadow-none"
+                placeholder="Recherche..."
+                aria-label="Search..."
+              />
+            </div>
+          </div>
+          <!-- /Search -->
+          <ul class="navbar-nav flex-row align-items-center ms-auto " *ngIf="ROLE === 'PATIENT'">
+            <li *ngIf="patient.doc_id">
+              <b>Dr. {{this.nomDocPatient}} {{this.prenomDocPatient}}</b>
+            </li>
+            <li *ngIf="!patient.doc_id" style="color: red;">
+              You are not associated with any doctor
+            </li>
+            <li>
+              <img src="assets/img/icons/ban-user.png" width="50px" (click)="openConfirmationModal()" style="cursor: pointer" alt="Disassociate from the doctor">
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+      <!-- Modal -->
+      <!-- Modal -->
+
+
+      <!-- / Navbar -->
+      <!-- Content wrapper -->
+      <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y" style="margin-right:210px">
+          <div class="row" style="width: 110%;">
+            <div class="col-lg-12 styleContent mb-4 order-0">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <router-outlet></router-outlet>
+<!--                  <app-graph *ngIf="ROLE === 'PATIENT'" [id]="id"></app-graph>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="confirmRemoveModal" tabindex="-1" aria-hidden="true" [ngClass]="{'show': isShowModal,'hide': !isShowModal}">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Confirm Removal</h5>
+                <!-- btn close -->
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  (click)="clearData()"
+                >
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to disassociate from the doctor?</p>
+              </div>
+              <!-- footer buttons -->
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-danger" (click)="Removedoctor()">Remove</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="clearData()" data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- / Content -->
+        <!-- Footer -->
+        <footer class="content-footer footer bg-footer-theme">
+          <div class="container-xxl d-flex flex-wrap justify-content-end py-2 flex-md-row flex-column">
+            <div class="mb-2 mb-md-0 footer-link me-4 ">
+              ©
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              Made with ❤️ 2023
+            </div>
+
+          </div>
+        </footer>
+        <!-- / Footer -->
+        <div class="content-backdrop fade"></div>
+      </div>
+      <!-- Content wrapper -->
+    </div>
+    <!-- / Layout page -->
+  </div>
+
+  <!-- Overlay -->
+  <div class="layout-overlay layout-menu-toggle"></div>
+</div>
+<!-- / Layout wrapper -->
+

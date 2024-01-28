@@ -1,0 +1,33 @@
+<div class="med">
+  <h2 style="
+  text-align: center;
+  margin-bottom: 90px;
+">RDF Graph</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Subject</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-size: larger;">{{ triples[0].subject }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Predicate</th>
+        <th>Object</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let triple of triples">
+        <td>{{ 'Predicate: ' + triple.predicate.join(', ') }}</td>
+        <td>{{ 'Object: ' + triple.object.join(', ') }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

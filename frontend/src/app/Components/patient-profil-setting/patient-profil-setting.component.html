@@ -1,0 +1,179 @@
+<div class="content-wrapper">
+  <!-- Content -->
+
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">
+            Account Settings
+          </span>
+    </h4>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <h5 class="card-header">Profile Details</h5>
+          <!-- Account -->
+          <div class="card-body">
+            <div class="d-flex align-items-start align-items-sm-center gap-4">
+              <img
+                src="assets/img/logo1.png"
+                alt="user-avatar"
+                class="d-block rounded"
+                height="100"
+                width="100"
+                id="uploadedAvatar"
+              />
+              <h3>
+                {{this.ROLE}}
+              </h3>
+            </div>
+          </div>
+          <hr class="my-0" />
+          <div class="card-body">
+            <form  (ngSubmit)="onSubmit()" [formGroup]="formService.formGroupPatient">
+              <div class="row">
+                <!-- First Name /prenom -->
+                <div class="mb-3 col-md-6">
+                  <label for="prenom" class="form-label">First Name</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="prenom"
+                    name="prenom"
+                    formControlName="prenom"
+                    placeholder="Exemple: John"
+                    autofocus
+                    [ngClass]="{ 'is-invalid':formService.prenom && formService.prenom.errors && formService.prenom.touched}"
+                  />
+                  <div class="invalid-feedback"
+                       *ngIf="formService.prenom && formService.prenom.hasError('required')" >
+                    Please enter your First Name*
+                  </div>
+                </div>
+
+                <!-- Last Name / family name  -->
+                <div class="mb-3 col-md-6">
+                  <label for="nom" class="form-label">Last Name</label>
+                  <input class="form-control"
+                         type="text"
+                         name="nom"
+                         placeholder="Exemple: Doe"
+                         id="nom"
+                         formControlName="nom"
+                          autofocus
+                         [ngClass]="{ 'is-invalid':formService.nom && formService.nom.errors && formService.nom.touched}"
+                  />
+                  <div class="invalid-feedback"
+                       *ngIf="formService.nom && formService.nom.hasError('required')" >
+                    Please enter your Last Name*
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3 col-md-6">
+                  <label for="emailPatient" class="form-label">E-mail</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="emailPatient"
+                    name="emailPatient"
+                    formControlName="emailPatient"
+                    placeholder="john.doe@example.com"
+                    autofocus
+                    readonly
+                    [ngClass]="{ 'is-invalid':formService.emailPatient && formService.emailPatient.errors && formService.emailPatient.touched}"
+                  />
+                  <div class="invalid-feedback"
+                       *ngIf="formService.emailPatient && formService.emailPatient.hasError('required')" >
+                    Please enter your email*
+                  </div>
+
+                </div>
+
+                <!-- Phone Number -->
+                <div class="mb-3 col-md-6">
+                  <label for="tel" class="form-label">Phone Number</label>
+                  <input
+                    type="text"
+                    placeholder="+216 00000000"
+                    class="form-control"
+                    id="tel"
+                    name="tel"
+                    formControlName="tel"
+                    autofocus
+                    readonly
+                    [ngClass]="{ 'is-invalid':formService.tel && formService.tel.errors && formService.tel.touched}"
+
+                  />
+                  <div class="invalid-feedback"
+                       *ngIf="formService.tel && formService.tel.hasError('required')" >
+                    Please enter your phone number*
+                  </div>
+                </div>
+
+                <!-- Age -->
+                <div class="form-group mb-3">
+                  <label for="age" class="form-label">Age </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="age"
+                    formControlName="age"
+                    name="age"
+                    placeholder="Enter age patient"
+                    autofocus
+                    [ngClass]="{ 'is-invalid':formService.age && formService.age.errors && formService.age.touched}"
+                  >
+                  <div class="invalid-feedback" *ngIf="formService.age && formService.age.hasError('required')">
+                    Please enter age patient *
+                  </div>
+                  <div class="invalid-feedback" *ngIf="formService.age && formService.age.hasError('pattern')">
+                    The age must be digits*
+                  </div>
+
+                </div>
+
+                <!-- Address -->
+                <div class="mb-3 col-md-12">
+                  <label for="adresse" class="form-label">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Exemple: Résidence les jasmins, Avenue de la bourse, Tunis"
+                    id="adresse"
+                    name="adresse"
+                    formControlName="adresse"
+                    autofocus
+                    [ngClass]="{ 'is-invalid':formService.adresse && formService.adresse.errors && formService.adresse.touched}"
+                  />
+                  <div class="invalid-feedback" *ngIf="formService.adresse && formService.adresse.hasError('required')">
+                    Please enter address patient*
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-2 d-flex justify-content-end">
+                <button type="submit"   class="btn btn-outline-primary me-2">Save changes</button>
+                <button type="button"  (click)="back()"  class="btn btn-outline-danger">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <!-- /Account -->
+        </div>
+      </div>
+    </div>
+    <div class="alert-container">
+      <!-- Alert success -->
+      <div class="alert alert-success" role="alert" *ngIf="showsuccessmessage">Updating successfuly! </div>
+      <!-- Alert error -->
+      <div class="alert alert-danger" role="alert" *ngIf="showerrormessage">Please check your information and try again.</div>
+
+    </div>
+  </div>
+  <!-- / Content -->
+</div>
+<!-- Content wrapper -->
+
+
+<!-- Page JS -->
+<script src="assets/js/pages-account-settings-account.js"></script>
+
